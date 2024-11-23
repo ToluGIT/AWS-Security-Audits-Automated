@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19  # Ensure Docker is available
+    commands:
+      - echo "Logging into public ECR..."
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+      - echo "Pulling Prowler image..."
+      - docker pull public.ecr.aws/prowler-cloud/prowler:latest
+  build:
+    commands:
+      - echo "Running Prowler security checks..."
+      - mkdir -p prowler-output
+      - docker run --rm -v $(pwd)/prowler-output:/prowler/output public.ecr.aws/prowler-cloud/prowler:latest -M json -o prowler-report
+  post_build:
+    commands:
+      - echo "Uploading report to S3..."
+      - REPORT_NAME="prowler-report-$(date +%Y-%m-%d_%H-%M-%S).json"
+      - mv prowler-output/prowler-report-*.json prowler-output/$REPORT_NAME
+      - aws s3 cp prowler-output/$REPORT_NAME s3://your-prowler-reports-bucket/
+      - echo "Security scan completed. Report uploaded to S3 as $REPORT_NAME"
+artifacts:
+  files:
+    - '**/*'
