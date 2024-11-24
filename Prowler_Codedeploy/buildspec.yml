@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Updating the package manager..."
+      - sudo apt update
+      - echo "Installing pipx..."
+      - sudo apt install -y pipx
+      - echo "Ensuring pipx path is available..."
+      - pipx ensurepath
+      - export PATH=$PATH:/root/.local/bin
+      - echo "Installing Prowler using pipx..."
+      - pipx install prowler
+      - echo "Verifying Prowler installation..."
+      - prowler -v
+  build:
+    commands:
+      - echo "Running Prowler to generate an HTML report and uploading it to S3..."
+      - prowler aws -M html -B your-prowler-reports-bucket --output-directory reports --output-filename prowler-report --region us-east-1 || echo "Prowler completed with non-zero exit code. Continuing..."
+  post_build:
+    commands:
+      - echo "Prowler scan completed. HTML report uploaded to S3 in 'reports' folder as 'prowler-report.html'."
+artifacts:
+  files:
+    - '**/*'
