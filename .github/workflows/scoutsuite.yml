@@ -40,7 +40,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Configure AWS Credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
@@ -59,9 +59,10 @@ jobs:
 
       - name: Upload Report to S3
         env:
-          TIMESTAMP: $(date +%Y-%m-%d_%H-%M-%S)
-          S3_DESTINATION: s3://$S3_BUCKET_URI/scout-reports/$TIMESTAMP/
+          S3_BUCKET_URI: ${{ env.S3_BUCKET_URI }}
         run: |
+          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+          S3_DESTINATION="s3://${S3_BUCKET_URI}/scout-reports/${TIMESTAMP}/"
           echo "Uploading reports to $S3_DESTINATION"
           aws s3 cp ScoutSuite/scout-report/ "$S3_DESTINATION" --recursive
 
