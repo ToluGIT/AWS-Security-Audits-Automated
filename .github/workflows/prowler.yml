@@ -1,0 +1,62 @@
+name: Run Prowler Security Scan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  
+
+jobs:
+  prowler-scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      S3_BUCKET_URI: ${{ secrets.S3_BUCKET_URI }}
+
+    steps:
+      - name: Checkout (Optional)
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      - name: Clone Prowler Repository
+        run: |
+          git clone https://github.com/prowler-cloud/prowler.git
+
+      - name: Install Prowler via Poetry
+        working-directory: prowler
+        run: |
+          poetry install
+
+      - name: Configure AWS Credentials for GitHub Actions
+        uses: aws-actions/configure-aws-credentials@v4  
+        with:
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}  
+          aws-region: ${{ secrets.AWS_REGION }}
+          audience: sts.amazonaws.com
+          
+      - name: Run Prowler
+        working-directory: prowler
+        run: |
+          poetry run python prowler.py -M html -o prowler-report
+
+      - name: Upload Report to S3
+        run: |
+          aws s3 cp prowler/output/prowler-report-*.html "$S3_BUCKET_URI"
+
+      - name: Clean up
+        run: |
+          rm -rf prowler
