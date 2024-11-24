@@ -3,7 +3,7 @@ name: Run Scout Suite Security Scan
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'  
+    - cron: '0 3 * * *'  # Runs daily at 3 AM UTC
 
 jobs:
   scoutsuite-scan:
@@ -13,14 +13,17 @@ jobs:
       id-token: write
       contents: read
 
+    env:
+      S3_BUCKET_URI: ${{ secrets.S3_BUCKET_URI }}
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: '3.9'
 
       - name: Install Dependencies
         run: |
@@ -37,7 +40,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Configure AWS Credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
@@ -50,9 +53,17 @@ jobs:
           source venv/bin/activate
           python scout.py aws --report-dir scout-report
 
-      - name: Upload Report to S3
+      - name: List Scout Suite Output Files
         run: |
-          aws s3 cp ScoutSuite/scout-report/ s3://${{ secrets.S3_BUCKET_URI }}/scout-report/ --recursive
+          ls -R ScoutSuite/scout-report
+
+      - name: Upload Report to S3
+        env:
+          TIMESTAMP: $(date +%Y-%m-%d_%H-%M-%S)
+          S3_DESTINATION: s3://$S3_BUCKET_URI/scout-reports/$TIMESTAMP/
+        run: |
+          echo "Uploading reports to $S3_DESTINATION"
+          aws s3 cp ScoutSuite/scout-report/ "$S3_DESTINATION" --recursive
 
       - name: Clean up
         run: |
