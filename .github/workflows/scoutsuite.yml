@@ -1,0 +1,59 @@
+name: Run Scout Suite Security Scan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'  
+
+jobs:
+  scoutsuite-scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-venv
+          python -m pip install --upgrade pip
+
+      - name: Clone Scout Suite Repository
+        run: |
+          git clone https://github.com/nccgroup/ScoutSuite.git
+          cd ScoutSuite
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHubActions-ScoutSuite
+          audience: sts.amazonaws.com
+
+      - name: Run Scout Suite
+        run: |
+          cd ScoutSuite
+          source venv/bin/activate
+          python scout.py aws --report-dir scout-report
+
+      - name: Upload Report to S3
+        run: |
+          aws s3 cp ScoutSuite/scout-report/ s3://${{ secrets.S3_BUCKET_URI }}/scout-report/ --recursive
+
+      - name: Clean up
+        run: |
+          rm -rf ScoutSuite
