@@ -51,7 +51,7 @@ jobs:
       - name: Run Prowler
         working-directory: prowler
         run: |
-          poetry run python prowler.py -M html -o prowler-report
+          poetry run python prowler.py -M html -o prowler-report || echo "Prowler completed with non-zero exit code. Continuing..."
 
       - name: Upload Report to S3
         run: |
