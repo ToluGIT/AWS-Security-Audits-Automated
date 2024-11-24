@@ -53,9 +53,17 @@ jobs:
         run: |
           poetry run python prowler.py -M html -o prowler-report || echo "Prowler completed with non-zero exit code. Continuing..."
 
-      - name: Upload Report to S3
+      - name: List Prowler Output Files
+        working-directory: prowler
         run: |
-          aws s3 cp prowler/output/prowler-report-*.html "$S3_BUCKET_URI"
+          echo "Listing Prowler report directory:"
+          ls -R prowler-report
+
+      - name: Upload Reports to S3
+        run: |
+          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+          S3_DESTINATION="$S3_BUCKET_URI/reports/$TIMESTAMP/"
+          aws s3 cp prowler/prowler-report/ "$S3_DESTINATION" --recursive
 
       - name: Clean up
         run: |
