@@ -3,7 +3,7 @@ import boto3
 ec2 = boto3.client('ec2')
 
 def lambda_handler(event, context):
-    # Extract the SG-ID and rule details from event by trigger service
+    # Extract the SG-ID and rule details from event by triggered service
     sg_id = event['detail']['requestParameters']['groupId']
     print(f"Checking security group: {sg_id}")
     
