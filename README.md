@@ -1,43 +1,23 @@
 <div align="center">
   <h1>AWS Security Audits Automation</h1>
-  <p>
-    <img src="https://img.shields.io/badge/AWS-Security-orange" alt="AWS Security"/>
-    <img src="https://img.shields.io/badge/Python-3.9+-blue" alt="Python 3.9+"/>
-    <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance"/>
-  </p>
 </div>
 
 <p align="center">A collection of automated security audit tools and remediation scripts for AWS environments.</p>
 
-<details>
-<summary>Table of Contents</summary>
 
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Repository Structure](#repository-structure)
-- [Setup Instructions](#setup-instructions)
-- [Security Scanning Schedule](#security-scanning-schedule)
-- [Script Functionality](#script-functionality)
-- [Future Enhancements](#future-enhancements)
-- [Reports](#reports)
-- [Security](#security)
-- [Support](#support)
+## Features
 
-</details>
-
-## ✨ Features
-
-### 🛡️ Security Scanning Tools
+### Security Scanning Tools
 - **Prowler Integration**: Daily automated security assessments using Prowler
 - **ScoutSuite Integration**: Daily security scans using ScoutSuite
 - **AWS Trusted Advisor**: Automated reporting of AWS Trusted Advisor check results
 
-### 🔧 Automated Remediation Functions
+### Automated Remediation Functions
 - **EBS Volume Encryption**: Automatically identifies and encrypts unencrypted EBS volumes
 - **EBS Volume Compliance**: Monitors and notifies about oversized EBS volumes
 - **Security Group Remediation**: Automatically removes overly permissive SSH rules (0.0.0.0/0 on port 22)
 
-## 📋 Prerequisites
+## Prerequisites
 
 <table>
   <tr>
@@ -50,7 +30,7 @@
   </tr>
 </table>
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 .
@@ -67,7 +47,7 @@
     └── buildspec.yml      # AWS CodeBuild specification for Prowler
 ```
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 <details>
 <summary><b>1. GitHub Actions Configuration</b></summary>
@@ -100,7 +80,7 @@ Deploy the following Lambda functions:
 - Trusted Advisor Reporting
 </details>
 
-## ⏰ Security Scanning Schedule
+## Security Scanning Schedule
 
 <table>
   <tr>
@@ -121,7 +101,7 @@ Deploy the following Lambda functions:
   </tr>
 </table>
 
-## 📝 Script Functionality
+## Script Functionality
 
 ### Lambda Functions
 
@@ -158,23 +138,13 @@ Deploy the following Lambda functions:
 - Helps maintain security group compliance
 </details>
 
-## 🔄 Future Enhancements
-
-> Version updates follow semantic versioning (MAJOR.MINOR.PATCH)
-
-### 🚀 Upcoming Features (v1.1.0)
-
-Feature types:
-- 🔒 Security Enhancement
-- 🔧 Code Improvement
-- 📊 Reporting Feature
-- 🔄 Process Automation
+## Future Enhancements
 
 <details>
-<summary><b>New Scripts (v1.1.0 - v1.2.0)</b></summary>
+<summary><b>New Scripts</b></summary>
 <br>
 
-🔒 Security Features:
+Security Features:
 - IAM user access key rotation automation
 - S3 bucket policy compliance checker
 - CloudTrail logging validator
@@ -184,10 +154,10 @@ Feature types:
 </details>
 
 <details>
-<summary><b>Existing Script Enhancements (v1.0.1 - v1.0.x)</b></summary>
+<summary><b>Existing Script Enhancements</b></summary>
 <br>
 
-🔧 Technical Improvements:
+Technical Improvements:
 - Adding support for multiple AWS regions in EBS encryption
 - Expanding security group remediation to cover additional ports
 - Enhanced reporting capabilities for volume compliance
@@ -198,7 +168,7 @@ Feature types:
 - Multi-account support for all functions
 </details>
 
-## 📊 Reports
+## Reports
 
 Security scan reports are automatically uploaded to S3 with the following structure:
 
@@ -220,19 +190,7 @@ Security scan reports are automatically uploaded to S3 with the following struct
     <td><code>s3://<bucket>/trusted-advisor-report-<timestamp>.json</code></td>
   </tr>
 </table>
-
-## 🔐 Security
-
-<div align="center">
-  <p>If you discover any security issues, please report them responsibly.</p>
-</div>
-
-## 💬 Support
-
-<div align="center">
-  <p>For support and questions, please open an issue in the GitHub repository.</p>
-</div>
-
+      
 ---
 <div align="center">
   <p>Made with ❤️ for AWS Security</p>
