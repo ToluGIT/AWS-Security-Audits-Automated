@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>AWS Security Audits Automation</h1>
+  <h1>AWS Security Audits Automation Scripts</h1>
 </div>
 
 <p align="center">A collection of automated security audit tools and remediation scripts for AWS environments.</p>
@@ -21,12 +21,12 @@
 
 <table>
   <tr>
-    <td>✅ AWS Account with appropriate permissions</td>
-    <td>✅ GitHub Actions enabled repository</td>
+    <td>✅ AWS Account</td>
+    <td>✅ GitHub Actions</td>
   </tr>
   <tr>
     <td>✅ Python 3.9+</td>
-    <td>✅ AWS CLI configured with appropriate credentials</td>
+    <td>✅ AWS CLI</td>
   </tr>
 </table>
 
@@ -64,7 +64,7 @@ Set up the following secrets in your GitHub repository:
 <summary><b>2. AWS Configuration</b></summary>
 <br>
 
-1. Create an IAM role with appropriate permissions for GitHub Actions
+1. Create an IAM role (OIDC) with appropriate permissions for GitHub Actions
 2. Configure S3 buckets for storing security reports
 3. Set up Lambda functions for remediation tasks
 </details>
@@ -124,7 +124,7 @@ Deploy the following Lambda functions:
 - Checks against maximum volume size limit (30GB)
 - Sends SNS notifications when volumes exceed the size limit
 - Tracks volume attachments to EC2 instances
-- Provides detailed reporting including instance ID and volume size
+- Provides detailed reporting, including instance ID and volume size
 </details>
 
 <details>
@@ -162,10 +162,7 @@ Technical Improvements:
 - Expanding security group remediation to cover additional ports
 - Enhanced reporting capabilities for volume compliance
 - Integration with additional notification channels
-- Support for custom compliance rules
-- Advanced filtering and tagging support
 - Backup verification for encrypted volumes
-- Multi-account support for all functions
 </details>
 
 ## Reports
