@@ -2,7 +2,8 @@
   <h1>AWS Security Audits Automation Scripts</h1>
 </div>
 
-<p align="center">A collection of automated security audit tools and remediation scripts for AWS environments.</p>
+<p align="center"> An AWS security automation collection featuring audit tools, automated 
+  remediation, compliance validation (SOC 2, GDPR), and cost optimization for environments.</p>
 
 
 ## Features
